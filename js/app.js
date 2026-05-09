@@ -82,10 +82,11 @@ $('auth-btn').addEventListener('click', async () => {
       await auth.signInWithEmailAndPassword(email, password);
     }
   } catch (err) {
+    console.error("Firebase Auth error:", err.code, err.message);
     let msg = t('authError');
     if (err.code === 'auth/email-already-in-use') msg = t('emailInUse');
     if (err.code === 'auth/weak-password') msg = t('weakPassword');
-    toast(msg, 'erro');
+    toast(msg + ' [' + (err.code || '?') + ']', 'erro');
     $('auth-btn').disabled = false;
   }
 });
