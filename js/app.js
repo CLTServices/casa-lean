@@ -65,15 +65,17 @@ $('auth-switch-link').addEventListener('click', () => {
 
 $('auth-btn').addEventListener('click', async () => {
   const email    = $('auth-email').value.trim();
-  const password = $('auth-password').value;
+  const password = $('auth-password').value.trim();
   const nome     = $('auth-name').value.trim();
 
-  if (!email || !password) { toast(t('authError'), 'erro'); return; }
+  if (!email) { toast('Preencha o email.', 'erro'); return; }
+  if (!password) { toast('Preencha a password.', 'erro'); return; }
+  if (authMode === 'register' && !nome) { toast('Preencha o nome.', 'erro'); return; }
+
   $('auth-btn').disabled = true;
 
   try {
     if (authMode === 'register') {
-      if (!nome) { toast(t('authError'), 'erro'); $('auth-btn').disabled = false; return; }
       const cred = await auth.createUserWithEmailAndPassword(email, password);
       await db.collection('users').doc(cred.user.uid).set({
         nome, email, criadoEm: firebase.firestore.FieldValue.serverTimestamp()
@@ -82,11 +84,17 @@ $('auth-btn').addEventListener('click', async () => {
       await auth.signInWithEmailAndPassword(email, password);
     }
   } catch (err) {
-    console.error("Firebase Auth error:", err.code, err.message);
-    let msg = t('authError');
+    console.error('Firebase Auth error:', err.code, err.message);
+    let msg = 'Erro: ' + (err.code || 'desconhecido');
     if (err.code === 'auth/email-already-in-use') msg = t('emailInUse');
     if (err.code === 'auth/weak-password') msg = t('weakPassword');
-    toast(msg + ' [' + (err.code || '?') + ']', 'erro');
+    if (err.code === 'auth/invalid-email') msg = 'Email inválido.';
+    if (err.code === 'auth/user-not-found') msg = 'Utilizador não encontrado.';
+    if (err.code === 'auth/wrong-password') msg = 'Password incorrecta.';
+    if (err.code === 'auth/invalid-credential') msg = 'Credenciais inválidas.';
+    if (err.code === 'auth/network-request-failed') msg = 'Erro de rede.';
+    if (err.code === 'auth/operation-not-allowed') msg = 'Operação não permitida no Firebase.';
+    toast(msg, 'erro');
     $('auth-btn').disabled = false;
   }
 });
