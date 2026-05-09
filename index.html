@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#0F172A">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Casa Lean">
+  <link rel="manifest" href="manifest.json">
+  <link rel="stylesheet" href="styles.css">
+  <title>Casa Lean — CLT Services</title>
+</head>
+<body>
+
+<!-- ── AUTH ──────────────────────────────────────────────── -->
+<div id="screen-auth" class="screen active">
+  <div class="auth-logo">
+    <div class="auth-logo-icon">🏠</div>
+    <div class="auth-logo-name">Casa Lean</div>
+    <div class="auth-logo-tagline" data-i18n="tagline">A sua casa, organizada.</div>
+    <div class="auth-powered" data-i18n="poweredBy">Uma solução CLT Services</div>
+  </div>
+  <div class="auth-box">
+    <h2 id="auth-title">Bem-vindo(a) de volta</h2>
+    <div class="input-group hidden" id="auth-name-group">
+      <label data-i18n="name">Nome</label>
+      <input type="text" id="auth-name" class="input-field" data-i18n-ph="yourName" placeholder="O seu nome" autocomplete="name">
+    </div>
+    <div class="input-group">
+      <label data-i18n="email">Email</label>
+      <input type="email" id="auth-email" class="input-field" placeholder="email@exemplo.com" autocomplete="email">
+    </div>
+    <div class="input-group">
+      <label data-i18n="password">Palavra-passe</label>
+      <input type="password" id="auth-password" class="input-field" placeholder="••••••••" autocomplete="current-password">
+    </div>
+    <button id="auth-btn" class="btn btn-primary" data-i18n="login">Entrar</button>
+    <div class="auth-switch">
+      <span id="auth-switch-text">Ainda não tem conta?</span>
+      <a id="auth-switch-link">Registe-se aqui</a>
+    </div>
+  </div>
+</div>
+
+<!-- ── HOME ──────────────────────────────────────────────── -->
+<div id="screen-home" class="screen">
+  <header class="app-header">
+    <div class="app-logo">Casa Lean <span>CLT Services</span></div>
+    <div class="header-right">
+      <div class="lang-toggle">
+        <button class="lang-btn" id="lang-pt">PT</button>
+        <button class="lang-btn" id="lang-en">EN</button>
+      </div>
+      <button id="btn-profile" class="btn-back" title="Perfil">👤</button>
+      <button id="btn-logout" class="btn-back" title="Sair">⎋</button>
+    </div>
+  </header>
+  <div class="home-body">
+    <div class="home-welcome">
+      <h1 data-i18n-prefix="Olá, ">Olá, <span id="home-username"></span></h1>
+      <p class="home-sub" data-i18n="myHome">A minha casa</p>
+    </div>
+    <div class="section-header">
+      <span class="section-title" data-i18n="rooms">Divisões</span>
+    </div>
+    <div class="rooms-grid" id="rooms-grid">
+      <p class="empty-state">A carregar...</p>
+    </div>
+    <button class="btn-add-room-full" id="btn-add-room" data-i18n="addRoom">+ Adicionar divisão</button>
+  </div>
+  <div class="clt-strip">
+    <span class="clt-strip-logo">CLT</span>
+    <span class="clt-strip-text">Casa Lean · <a href="https://www.cltservices.net" target="_blank">cltservices.net</a></span>
+  </div>
+</div>
+
+<!-- ── ROOM ───────────────────────────────────────────────── -->
+<div id="screen-room" class="screen">
+  <header class="app-header">
+    <button class="btn-back" id="btn-back-home">←</button>
+    <span id="room-icon-display" style="font-size:22px"></span>
+    <div class="app-logo" id="room-title" style="font-size:16px;color:var(--text)"></div>
+    <div class="header-right">
+      <button class="btn-back" id="btn-edit-room" style="font-size:16px">✏️</button>
+    </div>
+  </header>
+  <div class="room-header-sub">
+    <button class="tab-btn active" data-tab="cleaning" data-i18n="tabCleaning">🧹 Limpeza</button>
+    <button class="tab-btn" data-tab="org" data-i18n="tabOrganization">⭐ Organização</button>
+    <button class="tab-btn" data-tab="tasks" data-i18n="tabTasks">📋 Tarefas</button>
+  </div>
+
+  <!-- CLEANING TAB -->
+  <div class="tab-content" data-tab="cleaning">
+    <div id="cleaning-list"></div>
+    <button class="fab" id="btn-add-cleaning" data-i18n="addTask">+ Adicionar tarefa</button>
+  </div>
+
+  <!-- ORG TAB -->
+  <div class="tab-content hidden" data-tab="org">
+    <div id="org-categories"></div>
+    <button class="btn btn-primary" id="btn-save-org" style="margin-bottom:20px" data-i18n="orgSaveEval">Guardar avaliação</button>
+    <div class="org-history">
+      <div class="org-history-title" data-i18n="orgHistory">Histórico de avaliações</div>
+      <div id="org-history-list"></div>
+    </div>
+  </div>
+
+  <!-- TASKS TAB -->
+  <div class="tab-content hidden" data-tab="tasks">
+    <div id="rectasks-list"></div>
+    <button class="fab" id="btn-add-rectask" data-i18n="addRecTask">+ Adicionar tarefa</button>
+  </div>
+
+  <div class="clt-strip">
+    <span class="clt-strip-logo">CLT</span>
+    <span class="clt-strip-text">Casa Lean · <a href="https://www.cltservices.net" target="_blank">cltservices.net</a></span>
+  </div>
+</div>
+
+<!-- ── PROFILE ────────────────────────────────────────────── -->
+<div id="screen-profile" class="screen">
+  <header class="app-header">
+    <button class="btn-back" id="btn-back-home-profile">←</button>
+    <div class="app-logo">Casa Lean <span>Perfil</span></div>
+    <div class="header-right">
+      <div class="lang-toggle">
+        <button class="lang-btn" id="lang-pt-profile">PT</button>
+        <button class="lang-btn" id="lang-en-profile">EN</button>
+      </div>
+    </div>
+  </header>
+  <div class="profile-body">
+    <div class="profile-card">
+      <div class="profile-avatar" id="profile-avatar">👤</div>
+      <div class="profile-name-text" id="profile-name"></div>
+      <div class="profile-email-text" id="profile-email"></div>
+      <div class="profile-stats">
+        <div class="profile-stat">
+          <div class="profile-stat-num" id="profile-rooms">0</div>
+          <div class="profile-stat-label" data-i18n="rooms">Divisões</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="clt-card">
+      <div class="clt-card-logo">CLT Services</div>
+      <div class="clt-card-text">Especialistas em Operações, Lean e Melhoria Contínua<br>
+        <a href="https://www.cltservices.net" target="_blank">www.cltservices.net</a>
+      </div>
+    </div>
+
+    <div class="profile-section">
+      <button class="btn btn-danger" id="btn-logout-profile" data-i18n="logout">Sair</button>
+    </div>
+  </div>
+  <div class="clt-strip">
+    <span class="clt-strip-logo">CLT</span>
+    <span class="clt-strip-text">Casa Lean · <a href="https://www.cltservices.net" target="_blank">cltservices.net</a></span>
+  </div>
+</div>
+
+<!-- ── MODAL: ROOM ────────────────────────────────────────── -->
+<div id="modal-room" class="modal-overlay hidden">
+  <div class="modal-sheet">
+    <div class="modal-title" id="modal-room-title">Nova divisão</div>
+    <div class="input-group">
+      <label data-i18n="roomName">Nome da divisão</label>
+      <input type="text" id="modal-room-name" class="input-field" data-i18n-ph="roomNamePlaceholder" placeholder="Ex: Cozinha...">
+    </div>
+    <div class="input-group">
+      <label data-i18n="roomIcon">Ícone</label>
+      <div class="icon-picker" id="icon-picker"></div>
+    </div>
+    <button id="modal-room-delete" class="btn btn-danger" style="margin-bottom:10px;display:none" data-i18n="deleteRoom">Eliminar divisão</button>
+    <div class="modal-actions">
+      <button id="modal-room-cancel" class="btn btn-ghost" data-i18n="cancel">Cancelar</button>
+      <button id="modal-room-save" class="btn btn-primary" data-i18n="save">Guardar</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── MODAL: CLEANING TASK ───────────────────────────────── -->
+<div id="modal-cleaning" class="modal-overlay hidden">
+  <div class="modal-sheet">
+    <div class="modal-title" data-i18n="addTask">Adicionar tarefa</div>
+    <div class="input-group">
+      <label data-i18n="taskName">Descrição</label>
+      <input type="text" id="modal-cleaning-name" class="input-field" data-i18n-ph="taskNamePlaceholder" placeholder="Ex: Limpar o fogão...">
+    </div>
+    <div class="input-group">
+      <label data-i18n="frequency">Frequência</label>
+      <select id="modal-cleaning-freq" class="input-field">
+        <option value="daily" data-i18n="freqDaily">Diária</option>
+        <option value="weekly" data-i18n="freqWeekly">Semanal</option>
+        <option value="biweekly" data-i18n="freqBiweekly">Quinzenal</option>
+        <option value="monthly" selected data-i18n="freqMonthly">Mensal</option>
+        <option value="quarterly" data-i18n="freqQuarterly">Trimestral</option>
+      </select>
+    </div>
+    <div class="modal-actions">
+      <button id="modal-cleaning-cancel" class="btn btn-ghost" data-i18n="cancel">Cancelar</button>
+      <button id="modal-cleaning-save" class="btn btn-primary" data-i18n="save">Guardar</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── MODAL: RECURRING TASK ──────────────────────────────── -->
+<div id="modal-rectask" class="modal-overlay hidden">
+  <div class="modal-sheet">
+    <div class="modal-title" data-i18n="addRecTask">Adicionar tarefa</div>
+    <div class="input-group">
+      <label data-i18n="recTaskName">Tarefa</label>
+      <input type="text" id="modal-rectask-name" class="input-field" data-i18n-ph="recTaskPlaceholder" placeholder="Ex: Limpar filtro do ar...">
+    </div>
+    <div class="input-group">
+      <label data-i18n="frequency">Frequência</label>
+      <select id="modal-rectask-freq" class="input-field">
+        <option value="weekly">Semanal</option>
+        <option value="biweekly">Quinzenal</option>
+        <option value="monthly" selected>Mensal</option>
+        <option value="quarterly">Trimestral</option>
+      </select>
+    </div>
+    <div class="input-group">
+      <label data-i18n="nextDue">Próxima data</label>
+      <input type="date" id="modal-rectask-date" class="input-field">
+    </div>
+    <div class="modal-actions">
+      <button id="modal-rectask-cancel" class="btn btn-ghost" data-i18n="cancel">Cancelar</button>
+      <button id="modal-rectask-save" class="btn btn-primary" data-i18n="save">Guardar</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── TOAST ──────────────────────────────────────────────── -->
+<div id="toast" class="toast"></div>
+
+<!-- ── SCRIPTS ────────────────────────────────────────────── -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+<script src="js/i18n.js"></script>
+<script src="js/firebase-config.js"></script>
+<script src="js/app.js"></script>
+<script>
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/sw.js').catch(() => {});
+  }
+</script>
+</body>
+</html>
